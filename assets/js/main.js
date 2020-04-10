@@ -9,6 +9,9 @@ let btnClickHandler = (e) => {
 
     if (target.classList.contains('item-actions__cart')) {
         cartCounterLabel.innerHTML = ++cartCounter;
+        if (cartCounter === 1) {
+            cartCounterLabel.style.display = 'block'
+        }
 
         let fakeData = +target.parentElement.
         previousElementSibling.
@@ -16,13 +19,19 @@ let btnClickHandler = (e) => {
         replace(/^\$(\d+)\s\D+(\d+).*$/gui, '$1.$2');
 
         cartPrice = Math.round((cartPrice + fakeData) * 100) / 100;
-        console.log(cartPrice);
 
-        if (cartCounter === 1) {
-            cartCounterLabel.style.display = 'block'
-        }
+        let restoreHTML = target.innerHTML;
+
+        // target.innerHTML = cartPrice; //price appears on the button
+        target.innerHTML = `Added ${cartPrice.toFixed(2)} $`; //make 2 signs after a dot
+        cartContainer.removeEventListener('click', btnClickHandler);
+
+        setTimeout(() => {
+            target.innerHTML = restoreHTML;
+            cartContainer.addEventListener('click', btnClickHandler);
+        }, 2000);
     }
-}
+};
 
 cartContainer.addEventListener('click', btnClickHandler);
 
